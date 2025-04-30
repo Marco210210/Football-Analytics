@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Electron App</title>
+  <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container" id="teams-section">
+    <h1 class="text-center" style="margin-top: 30px;">Classifica 2017/2018 Serie A</h1>
+    <div class="btn-group" role="group" aria-label="Basic example">
+      <button id="generate-chart-2" class="btn btn-secondary" style="background-color: #19a5ff; border: none;">Percentuale tocchi palla</button>
+    </div>
+    <ul id="teams-list" class="list-group mt-4"></ul>
+  </div>
+  <div class="container" id="charts-section" style="display: none">
+    <div class="header">
+      <h1 id="team-name" class="mt-4">
+        <img id="team-logo" alt="Team Logo" style="vertical-align: middle; margin-right: 10px; display: none; width: 45px; height: auto;" />
+        <span id="team-name-text"></span>
+      </h1>
+    </div>
+    <div class="btn-group" role="group" aria-label="Basic example">
+      <button id="show-roster" class="btn btn-secondary" style="background-color: #19a5ff; border: none;">Rosa</button>
+      <button id="show-matches" class="btn btn-secondary" style="background-color: #fe4f19; border: none;">Partite giocate</button>
+      <button id="back-to-teams" class="btn btn-secondary" style="background-color: #f00c18; border: none;">Torna alla classifica</button> 
+    </div>
+    <div id="content">
+      <img id="chart-img-2" class="img-fluid" style="display: none" alt="Generated Chart 2" />
+    </div>
+    <div class="loader-container" id="matches-loader" style="display: none">
+      <div class="loader"></div>
+      <div class="loader-text">Loading...</div>
+    </div>
+    <div class="container" id="matches-section" style="display: none">
+      <div class="header"></div>
+      <ul id="matches-list" class="list-group mt-4"></ul>
+    </div>
+    <div class="loader-container" id="roster-loader" style="display: none">
+      <div class="loader"></div>
+      <div class="loader-text">Loading...</div>
+    </div>
+    <div class="container" id="roster-section" style="display: none">
+      <div class="header" id="roster-header" style="display: none"></div>
+      <ul id="roster-list" class="list-group mt-4"></ul>
+    </div>
+  </div>
+  <div class="container" id="summary-chart-section" style="display: none">
+    <div class="header">
+      <h1 class="mt-4">Percentuale tocchi palla</h1>
+    </div>
+    <div id="content">
+      <img id="summary-chart-img" class="img-fluid" style="display: none" alt="Summary Chart" />
+    </div>
+    <div class="text-center mt-4">
+      <button id="back-to-teams-summary" class="btn btn-primary" style="background-color: #f00c18; border: none; margin-bottom: 10px;">Torna alla classifica</button>
+    </div>
+  </div>
+  <div class="container" id="match-details-section" style="display: none">
+    <div class="header">
+      <h2 id="home-team-name"></h2>
+      <h2 id="away-team-name"></h2>
+    </div>
+    <div class="btn-group" role="group" aria-label="Basic example">
+      <button id="generate-shot-chart" class="btn btn-primary" style="background-color: #13d1ff; border: none;">Grafico tiri</button>
+      <button id="generate-pass-flow-team1" class="btn btn-primary" style="background-color: #1fd224; border: none;">Generate Team 1 Pass Flow</button>
+      <button id="generate-pass-flow-team2" class="btn btn-primary" style="background-color: #19a5ff; border: none;">Generate Team 2 Pass Flow</button>
+      <button id="generate-pass-plot-team1" class="btn btn-primary" style="background-color: #1fd224; border: none;">Generate Team 1 Pass Plot</button>
+      <button id="generate-pass-plot-team2" class="btn btn-primary" style="background-color: #19a5ff; border: none;">Generate Team 2 Pass Plot</button>
+      <button id="generate-goal-chart" class="btn btn-primary" style="background-color: #ffaa00; border: none;">Grafico gol</button>
+      <button id="generate-formation" class="btn btn-primary" style="background-color: #fe4f19; border: none;">Formazione</button>
+      <button id="back-to-matches" class="btn btn-primary" style="background-color: #f00c18; border: none;">Torna alle partite</button>
+    </div>
+    <div class="loader-container" id="match-loader" style="display: none">
+      <svg xmlns="http://www.w3.org/2000/svg" height="200px" width="200px" viewBox="0 0 200 200" class="pencil">
+        <defs>
+          <clipPath id="pencil-eraser">
+            <rect height="30" width="30" ry="5" rx="5"></rect>
+          </clipPath>
+        </defs>
+        <circle transform="rotate(-113,100,100)" stroke-linecap="round" stroke-dashoffset="439.82" stroke-dasharray="439.82 439.82" stroke-width="2" stroke="currentColor" fill="none" r="70" class="pencil__stroke"></circle>
+        <g transform="translate(100,100)" class="pencil__rotate">
+          <g fill="none">
+            <circle transform="rotate(-90)" stroke-dashoffset="402" stroke-dasharray="402.12 402.12" stroke-width="30" stroke="hsl(223,90%,50%)" r="64" class="pencil__body1"></circle>
+            <circle transform="rotate(-90)" stroke-dashoffset="465" stroke-dasharray="464.96 464.96" stroke-width="10" stroke="hsl(223,90%,60%)" r="74" class="pencil__body2"></circle>
+            <circle transform="rotate(-90)" stroke-dashoffset="339" stroke-dasharray="339.29 339.29" stroke-width="10" stroke="hsl(223,90%,40%)" r="54" class="pencil__body3"></circle>
+          </g>
+          <g transform="rotate(-90) translate(49,0)" class="pencil__eraser">
+            <g class="pencil__eraser-skew">
+              <rect height="30" width="30" ry="5" rx="5" fill="hsl(223,90%,70%)"></rect>
+              <rect clip-path="url(#pencil-eraser)" height="30" width="5" fill="hsl(223,90%,60%)"></rect>
+              <rect height="20" width="30" fill="hsl(223,10%,90%)"></rect>
+              <rect height="20" width="15" fill="hsl(223,10%,70%)"></rect>
+              <rect height="20" width="5" fill="hsl(223,10%,80%)"></rect>
+              <rect height="2" width="30" y="6" fill="hsla(223,10%,10%,0.2)"></rect>
+              <rect height="2" width="30" y="13" fill="hsla(223,10%,10%,0.2)"></rect>
+            </g>
+          </g>
+          <g transform="rotate(-90) translate(49,-30)" class="pencil__point">
+            <polygon points="15 0,30 30,0 30" fill="hsl(33,90%,70%)"></polygon>
+            <polygon points="15 0,6 30,0 30" fill="hsl(33,90%,50%)"></polygon>
+            <polygon points="15 0,20 10,10 10" fill="hsl(223,10%,10%)"></polygon>
+          </g>
+        </g>
+      </svg>
+    </div>
+    <div id="shot-chart-container" style="display: none;">
+      <img id="shot-chart-img" class="img-fluid" alt="Generated Shot Chart" />
+    </div>
+    <div id="content">
+      <img id="pass-flow-chart-img" class="img-fluid" style="display: none" alt="Generated Pass Flow Chart" />
+      <img id="pass-plot-chart-img" class="img-fluid" style="display: none" alt="Generated Pass Plot Chart" />
+      <img id="goal-chart-img" class="img-fluid" style="display: none" alt="Generated Goal Chart" />
+      <p id="no-goals-message" style="display: none">Nessun gol su azione</p>
+      <ul id="formation-output" class="list-group" style="display: none"></ul>
+    </div>
+  </div>
+  <div class="container" id="player-details-section" style="display: none">
+    <div class="header">
+      <h1 id="player-name" class="mt-4"></h1>
+    </div>
+    <div class="btn-group" role="group" aria-label="Basic example">
+      <button id="generate-chart-1" class="btn btn-primary" style="background-color: #19a5ff; border: none;">Player rank</button>
+      <button id="back-to-roster" class="btn btn-primary" style="background-color: #f00c18; border: none;">Torna alle rose</button>
+    </div>
+    <div class="loader-container" id="summary-loader" style="display: none">
+      <svg xmlns="http://www.w3.org/2000/svg" height="200px" width="200px" viewBox="0 0 200 200" class="pencil">
+        <defs>
+          <clipPath id="pencil-eraser">
+            <rect height="30" width="30" ry="5" rx="5"></rect>
+          </clipPath>
+        </defs>
+        <circle transform="rotate(-113,100,100)" stroke-linecap="round" stroke-dashoffset="439.82" stroke-dasharray="439.82 439.82" stroke-width="2" stroke="currentColor" fill="none" r="70" class="pencil__stroke"></circle>
+        <g transform="translate(100,100)" class="pencil__rotate">
+          <g fill="none">
+            <circle transform="rotate(-90)" stroke-dashoffset="402" stroke-dasharray="402.12 402.12" stroke-width="30" stroke="hsl(223,90%,50%)" r="64" class="pencil__body1"></circle>
+            <circle transform="rotate(-90)" stroke-dashoffset="465" stroke-dasharray="464.96 464.96" stroke-width="10" stroke="hsl(223,90%,60%)" r="74" class="pencil__body2"></circle>
+            <circle transform="rotate(-90)" stroke-dashoffset="339" stroke-dasharray="339.29 339.29" stroke-width="10" stroke="hsl(223,90%,40%)" r="54" class="pencil__body3"></circle>
+          </g>
+          <g transform="rotate(-90) translate(49,0)" class="pencil__eraser">
+            <g class="pencil__eraser-skew">
+              <rect height="30" width="30" ry="5" rx="5" fill="hsl(223,90%,70%)"></rect>
+              <rect clip-path="url(#pencil-eraser)" height="30" width="5" fill="hsl(223,90%,60%)"></rect>
+              <rect height="20" width="30" fill="hsl(223,10%,90%)"></rect>
+              <rect height="20" width="15" fill="hsl(223,10%,70%)"></rect>
+              <rect height="20" width="5" fill="hsl(223,10%,80%)"></rect>
+              <rect height="2" width="30" y="6" fill="hsla(223,10%,10%,0.2)"></rect>
+              <rect height="2" width="30" y="13" fill="hsla(223,10%,10%,0.2)"></rect>
+            </g>
+          </g>
+          <g transform="rotate(-90) translate(49,-30)" class="pencil__point">
+            <polygon points="15 0,30 30,0 30" fill="hsl(33,90%,70%)"></polygon>
+            <polygon points="15 0,6 30,0 30" fill="hsl(33,90%,50%)"></polygon>
+            <polygon points="15 0,20 10,10 10" fill="hsl(223,10%,10%)"></polygon>
+          </g>
+        </g>
+      </svg>
+    </div>
+    <div id="content">
+      <img id="chart-img" class="img-fluid" style="display: none" alt="Generated Chart" />
+      <img id="radar-chart-img" class="img-fluid" style="display: none" alt="Generated Radar Chart" />
+    </div>
+  </div>
+  <div class="container" id="formation-section" style="display: none">
+    <div id="match-summary-container" class="text-center"></div>
+    <div id="match-summary"></div>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-6">
+          <h3 id="team1-formation-title"></h3>
+          <ul id="team1-starters" class="list-group mt-4"></ul>
+          <h3 id="team1-subs-title"></h3>
+          <ul id="team1-subs" class="list-group mt-4"></ul>
+        </div>
+        <div class="col-md-6">
+          <h3 id="team2-formation-title"></h3>
+          <ul id="team2-starters" class="list-group mt-4"></ul>
+          <h3 id="team2-subs-title"></h3>
+          <ul id="team2-subs" class="list-group mt-4"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container text-center" id="heatmap-section" style="display: none;">
+    <div class="header">
+      <h1 id="heatmap-player-name" class="mt-4"><span id="heatmap-player-name-text"></span> heatmap</h1>
+    </div>
+    <img id="heatmap-img" style="margin-bottom: 10px;" class="img-fluid mt-4 mx-auto d-block" src="" alt="Heatmap" />
+  </div>    
+  <script src="renderer.js"></script>
+</body>
+</html>
