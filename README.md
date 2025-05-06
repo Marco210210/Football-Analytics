@@ -69,9 +69,9 @@ Football_Analytics/
 
 ## 👥 Contributors
 
-- Di Maio Marco
 - Arcangeli Giovanni
-- Ciancio Vittorio
+- [Ciancio Vittorio](https://github.com/VittorioCiancio)
+- Di Maio Marco
 
 ---
 
